@@ -13,23 +13,24 @@ public class CharacterMovement : MonoBehaviour
 
     [Header("Character Movement")]
     [SerializeField] protected float characterSpeed = 3f;
+    [SerializeField] protected float jumpForce = 1f;
 
     [Header("Character Gravity")]
     [SerializeField] protected bool isGrounded;
     [SerializeField] protected float characterGravity;
     [SerializeField] protected float fallVelocity;
 
-    protected void Reset()
+    private void Reset()
     {
         _characterController = GetComponent<CharacterController>();
     }
 
-    protected void OnValidate()
+    private void OnValidate()
     {
         _characterController ??= GetComponent<CharacterController>();
     }
 
-    protected void Awake()
+    private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
     }
@@ -45,7 +46,7 @@ public class CharacterMovement : MonoBehaviour
 
     protected void Jump()
     {
-
+        Debug.Log($"{name}: The jump logic is not implemented yet!");
     }
 
     protected void ApplyGravity()

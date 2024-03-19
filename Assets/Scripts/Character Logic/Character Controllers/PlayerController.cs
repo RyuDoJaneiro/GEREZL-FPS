@@ -13,6 +13,9 @@ public class PlayerController : CharacterMovement
     [SerializeField] private float _mouseXSensitivity = 5f;
     [SerializeField] private float _mouseYSensitivity = 5f;
 
+    [Header("Gun")]
+    [SerializeField] private float _maxGunDistance = 10f;
+
     private float _mouseX;
     private float _mouseY;
     private Camera _playerCamera;
@@ -48,7 +51,21 @@ public class PlayerController : CharacterMovement
         _playerInput = new Vector2(moveDirection.x, moveDirection.z);
     }
 
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        Jump();
+    }
 
+    public void OnShoot(InputAction.CallbackContext context)
+    {
+        Ray ray = new Ray(transform.position, _playerCamera.transform.forward);
+        if (Physics.Raycast(ray, out RaycastHit hitInfo, _maxGunDistance))
+        {
+            Debug.Log($"{name}: {hitInfo.transform.name}");
+        }
+
+        Debug.DrawRay(ray.origin, ray.direction, Color.yellow);
+    }
 
     public void OnMouseX(InputAction.CallbackContext context)
     {
