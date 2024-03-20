@@ -6,7 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterController))]
 public class CharacterMovement : MonoBehaviour
 {
-    private CharacterController _characterController;
+    protected CharacterController _characterController;
+    protected Vector3 nextPosition;
 
     [Header("Character Info.")]
     [SerializeField] protected string characterName;
@@ -17,7 +18,8 @@ public class CharacterMovement : MonoBehaviour
 
     [Header("Character Gravity")]
     [SerializeField] protected bool isGrounded;
-    [SerializeField] protected float characterGravity;
+    [SerializeField] protected float characterGravity = -9.81f;
+    [SerializeField] protected float characterGravityMultiplier = 3.0f;
     [SerializeField] protected float fallVelocity;
 
     private void Reset()
@@ -35,28 +37,31 @@ public class CharacterMovement : MonoBehaviour
         _characterController = GetComponent<CharacterController>();
     }
 
-    protected void MoveCharacter(Vector3 desiredDirection)
+    protected void MoveCharacter()
     {
-        // Set gravity
-        desiredDirection.y = fallVelocity;
-
-        Vector3 nextPosition = characterSpeed * Time.deltaTime * desiredDirection.normalized;
-        _characterController.Move(nextPosition);
+        _characterController.Move(characterSpeed * Time.deltaTime * nextPosition);
     }
 
     protected void Jump()
     {
-        Debug.Log($"{name}: The jump logic is not implemented yet!");
+        if (!isGrounded) return;
+
+        fallVelocity += jumpForce;
     }
 
     protected void ApplyGravity()
     {
         isGrounded = _characterController.isGrounded;
 
-        if (!isGrounded)
+        if (isGrounded && fallVelocity < 0.0f)
         {
-            fallVelocity -= characterGravity * Time.deltaTime;
-            fallVelocity = Mathf.Clamp(fallVelocity, -5, 20);
+            fallVelocity = -1.0f;
         }
+        else
+        {
+            fallVelocity += characterGravity * characterGravityMultiplier * Time.deltaTime;
+        }
+
+        nextPosition.y = fallVelocity;
     }
 }

@@ -666,9 +666,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterName: Player
   characterSpeed: 10
-  jumpForce: 1
+  jumpForce: 3
   isGrounded: 0
-  characterGravity: 5
+  characterGravity: -9.81
+  characterGravityMultiplier: 1
   fallVelocity: 0
   _playerInput: {x: 0, y: 0}
   _mouseXSensitivity: 9
@@ -696,7 +697,7 @@ CharacterController:
   m_Height: 2
   m_Radius: 0.5
   m_SlopeLimit: 45
-  m_StepOffset: 1
+  m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0, z: 0}

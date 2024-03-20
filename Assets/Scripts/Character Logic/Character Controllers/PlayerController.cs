@@ -28,7 +28,7 @@ public class PlayerController : CharacterMovement
 
     private void FixedUpdate()
     {
-        MoveCharacter(new Vector3(_playerInput.x, 0, _playerInput.y));
+        MoveCharacter();
         ApplyGravity();
     }
 
@@ -39,20 +39,17 @@ public class PlayerController : CharacterMovement
 
     public void OnMovement(InputAction.CallbackContext context)
     {
-        Vector2 rawInput = context.ReadValue<Vector2>();
+        _playerInput = context.ReadValue<Vector2>();
 
-        Vector3 forward = _playerCamera.transform.forward;
-        Vector3 right = _playerCamera.transform.right;
+        Vector3 relativeDirection = new Vector3(_playerInput.x, 0.0f, _playerInput.y);
+        relativeDirection = relativeDirection.x * transform.right + relativeDirection.z * transform.forward;
 
-        forward.y = 0f;
-        forward.Normalize();
-
-        Vector3 moveDirection = forward * rawInput.y + right * rawInput.x;
-        _playerInput = new Vector2(moveDirection.x, moveDirection.z);
+        nextPosition = relativeDirection.normalized;
     }
 
     public void OnJump(InputAction.CallbackContext context)
     {
+        if (!context.started) return;
         Jump();
     }
 
