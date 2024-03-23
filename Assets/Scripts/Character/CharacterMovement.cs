@@ -37,9 +37,9 @@ public class CharacterMovement : MonoBehaviour
         _characterController = GetComponent<CharacterController>();
     }
 
-    protected void MoveCharacter()
+    public virtual void MoveCharacter(Vector2 rawDirection)
     {
-        _characterController.Move(characterSpeed * Time.deltaTime * nextPosition);
+        nextPosition = new Vector3(rawDirection.x, 0f, rawDirection.y);
     }
 
     protected void Jump()
