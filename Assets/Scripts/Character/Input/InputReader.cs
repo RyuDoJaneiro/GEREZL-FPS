@@ -9,6 +9,7 @@ namespace Inputs
         public event Action<Vector2> OnMovementInput = delegate { };
         public event Action OnJumpInput = delegate { };
         public event Action OnShootInput = delegate { };
+        public event Action OnReloadInput = delegate { };
         public event Action<float> OnMouseXInput = delegate { };
         public event Action<float> OnMouseYInput = delegate { };
 
@@ -27,6 +28,12 @@ namespace Inputs
         {
             if (context.started)
                 OnShootInput.Invoke();
+        }
+
+        public void HandleReloadInput(InputAction.CallbackContext context)
+        {
+            if (context.started)
+                OnReloadInput.Invoke();
         }
 
         public void HandleMouseXInput(InputAction.CallbackContext context)

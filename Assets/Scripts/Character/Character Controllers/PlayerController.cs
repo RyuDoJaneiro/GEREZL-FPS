@@ -6,11 +6,18 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(GunLogic))]
 public class PlayerController : CharacterMovement
 {
     [SerializeField] private Vector2 _playerInput;
 
     [SerializeField] private InputReader _inputReader;
+    [SerializeField] private GunLogic _gunLogic;
+
+    private void Start()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+    }
 
     private void OnEnable()
     {
@@ -22,6 +29,8 @@ public class PlayerController : CharacterMovement
 
         _inputReader.OnMovementInput += MoveCharacter;
         _inputReader.OnJumpInput += Jump;
+        _inputReader.OnShootInput += _gunLogic.Shoot;
+        _inputReader.OnReloadInput += _gunLogic.Reload;
     }
 
     private void OnDisable()
@@ -34,12 +43,9 @@ public class PlayerController : CharacterMovement
 
         _inputReader.OnMovementInput -= MoveCharacter;
         _inputReader.OnJumpInput -= Jump;
+        _inputReader.OnShootInput -= _gunLogic.Shoot;
     }
 
-    private void Start()
-    {
-        Cursor.lockState = CursorLockMode.Locked;
-    }
 
     private void FixedUpdate()
     {

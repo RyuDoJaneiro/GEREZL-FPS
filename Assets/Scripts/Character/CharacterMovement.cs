@@ -11,6 +11,8 @@ public class CharacterMovement : MonoBehaviour
 
     [Header("Character Info.")]
     [SerializeField] protected string characterName;
+    [SerializeField] protected int characterMaxHealth = 100;
+    [SerializeField] protected int characterActualHealth = 100; 
 
     [Header("Character Movement")]
     [SerializeField] protected float characterSpeed = 3f;
