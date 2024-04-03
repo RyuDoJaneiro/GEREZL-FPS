@@ -1,4 +1,5 @@
 using Inputs;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,12 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float _mouseXSensitivity = 5f;
     [SerializeField] private float _mouseYSensitivity = 5f;
 
+    [Header("Camera Settings")]
+    [SerializeField] private float _maxEnemyRayDetection = 100f;
+    [SerializeField] private LayerMask _enemyLayerMask;
+
+    public event Action OnEnemyDetection = delegate { };
+
     private void OnEnable()
     {
         if (!inputReader) return;
@@ -26,8 +33,6 @@ public class CameraController : MonoBehaviour
 
     private void OnDisable()
     {
-        if (!inputReader) return;
-
         inputReader.OnMouseXInput -= GetMouseX;
         inputReader.OnMouseYInput -= GetMouseY;
     }
@@ -54,6 +59,15 @@ public class CameraController : MonoBehaviour
         transform.Rotate(Vector3.right, -_mouseY, Space.Self);
 
         transform.position = targetObject.position;
+        
+        Ray pointToObj = new(transform.position, transform.forward);
+        if (Physics.Raycast(pointToObj, _maxEnemyRayDetection, _enemyLayerMask))
+        {
+            OnEnemyDetection?.Invoke();
+            Debug.Log($"{name}: Enemy detected!");
+        }
+
+        Debug.DrawRay(pointToObj.origin, pointToObj.direction * _maxEnemyRayDetection, Color.yellow);
     }
 
 }

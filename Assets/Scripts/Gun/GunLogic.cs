@@ -8,16 +8,15 @@ public class GunLogic : MonoBehaviour
     [SerializeField] private float gunMaxDistance = 30f;
 
     public GunDatapack GunData { get => gunData; set => gunData = value; }
+    public float GunMaxDistance { get => gunMaxDistance; set => gunMaxDistance = value; }
 
     public void Shoot()
     {
-        Ray bullet = new Ray(transform.position, Camera.main.transform.forward);
-        if (Physics.Raycast(bullet, out RaycastHit hitInfo, gunMaxDistance))
+        Ray bullet = new(transform.position, Camera.main.transform.forward);
+        if (Physics.Raycast(bullet, out RaycastHit hitInfo, GunMaxDistance))
         {
             Debug.Log($"{name}: I shooted to {hitInfo.transform.name}");
         }
-
-        Debug.DrawRay(bullet.origin, bullet.direction * gunMaxDistance, Color.green);
     }
 
     public void Reload()

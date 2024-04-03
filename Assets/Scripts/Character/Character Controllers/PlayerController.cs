@@ -13,10 +13,12 @@ public class PlayerController : CharacterMovement
 
     [SerializeField] private InputReader _inputReader;
     [SerializeField] private GunLogic _gunLogic;
+    private Camera mainCamera;
 
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        mainCamera = Camera.main;
     }
 
     private void OnEnable()
@@ -35,17 +37,11 @@ public class PlayerController : CharacterMovement
 
     private void OnDisable()
     {
-        if (!_inputReader)
-        {
-            Debug.LogError($"{name}: The InputReader is null!");
-            return;
-        }
-
         _inputReader.OnMovementInput -= MoveCharacter;
         _inputReader.OnJumpInput -= Jump;
         _inputReader.OnShootInput -= _gunLogic.Shoot;
+        _inputReader.OnReloadInput -= _gunLogic.Reload;
     }
-
 
     private void FixedUpdate()
     {
@@ -64,8 +60,6 @@ public class PlayerController : CharacterMovement
 
     private void RotatePlayer()
     {
-        Camera mainCamera = Camera.main;
-
         if (!mainCamera)
         {
             Debug.LogError($"{name}: Main Camera is null." +
