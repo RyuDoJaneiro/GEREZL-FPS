@@ -21,7 +21,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float _maxEnemyRayDetection = 100f;
     [SerializeField] private LayerMask _enemyLayerMask;
 
-    public event Action OnEnemyDetection = delegate { };
+    public event Action<bool> OnEnemyDetection = delegate { };
 
     private void OnEnable()
     {
@@ -63,8 +63,12 @@ public class CameraController : MonoBehaviour
         Ray pointToObj = new(transform.position, transform.forward);
         if (Physics.Raycast(pointToObj, _maxEnemyRayDetection, _enemyLayerMask))
         {
-            OnEnemyDetection?.Invoke();
+            OnEnemyDetection?.Invoke(true);
             Debug.Log($"{name}: Enemy detected!");
+        }
+        else
+        {
+            OnEnemyDetection?.Invoke(false);
         }
 
         Debug.DrawRay(pointToObj.origin, pointToObj.direction * _maxEnemyRayDetection, Color.yellow);

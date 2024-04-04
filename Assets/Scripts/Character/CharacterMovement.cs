@@ -66,4 +66,20 @@ public class CharacterMovement : MonoBehaviour
 
         nextPosition.y = fallVelocity;
     }
+
+    protected void ApplyDamage(int damageAmount)
+    {
+        characterActualHealth -= damageAmount;
+
+        if (characterActualHealth <= 0) 
+        {
+            Death();
+        }
+    }
+
+    protected void Death()
+    {
+        Debug.LogWarning($"{name}: Has died!");
+        Destroy(gameObject);
+    }
 }
