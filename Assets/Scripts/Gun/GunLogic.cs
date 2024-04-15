@@ -16,6 +16,9 @@ public class GunLogic : MonoBehaviour
         if (Physics.Raycast(bullet, out RaycastHit hitInfo, GunMaxDistance))
         {
             Debug.Log($"{name}: I shooted to {hitInfo.transform.name}");
+            IHitteable hitObj = hitInfo.transform.GetComponent<IHitteable>();
+
+            hitObj?.ReceiveDamage(GunData.damagePerBullet);
         }
     }
 

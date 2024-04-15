@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gunName: Gun
   bulletsPerShoot: 1
-  damagePerBullet: 1
+  damagePerBullet: 10
   timeBetweenShoots: 1

@@ -21,12 +21,14 @@ public class PlayerHUDManager : MonoBehaviour
             return;
         }
 
+        gameObject.GetComponent<CharacterManager>().OnCharacterDamaged += HandleHealthBarUpdate;
         _cameraController.OnEnemyDetection += ChangeCrossHairColor;
     }
 
     private void OnDisable()
     {
         _cameraController.OnEnemyDetection -= ChangeCrossHairColor;
+        gameObject.GetComponent<CharacterManager>().OnCharacterDamaged -= HandleHealthBarUpdate;
     }
 
     private void ChangeCrossHairColor(bool enemyDetectionStatus)
@@ -35,5 +37,13 @@ public class PlayerHUDManager : MonoBehaviour
             _crossHair.color = Color.red;
         else
             _crossHair.color= Color.white;
+    }
+
+    public void HandleHealthBarUpdate(float amount)
+    {
+        _healthBar.value -= amount;
+
+        if (_healthBar.value < 0)
+            _healthBar.value = 0;
     }
 }

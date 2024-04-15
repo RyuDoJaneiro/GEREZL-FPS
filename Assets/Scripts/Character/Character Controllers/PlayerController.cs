@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(GunLogic))]
-public class PlayerController : CharacterMovement
+public class PlayerController : CharacterManager
 {
     [SerializeField] private Vector2 _playerInput;
 

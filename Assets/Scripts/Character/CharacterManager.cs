@@ -2,17 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using System;
 
 [RequireComponent(typeof(CharacterController))]
-public class CharacterMovement : MonoBehaviour
+public class CharacterManager : MonoBehaviour, IHitteable
 {
     protected CharacterController _characterController;
     protected Vector3 nextPosition;
 
     [Header("Character Info.")]
     [SerializeField] protected string characterName;
-    [SerializeField] protected int characterMaxHealth = 100;
-    [SerializeField] protected int characterActualHealth = 100; 
+    [SerializeField] protected float characterMaxHealth = 100f;
+    [SerializeField] protected float characterActualHealth = 100f; 
 
     [Header("Character Movement")]
     [SerializeField] protected float characterSpeed = 3f;
@@ -23,6 +24,8 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] protected float characterGravity = -9.81f;
     [SerializeField] protected float characterGravityMultiplier = 3.0f;
     [SerializeField] protected float fallVelocity;
+
+    public event Action<float> OnCharacterDamaged = delegate { };
 
     private void Reset()
     {
@@ -67,14 +70,10 @@ public class CharacterMovement : MonoBehaviour
         nextPosition.y = fallVelocity;
     }
 
-    protected void ApplyDamage(int damageAmount)
+    public void ReceiveDamage(float damageAmount)
     {
         characterActualHealth -= damageAmount;
-
-        if (characterActualHealth <= 0) 
-        {
-            Death();
-        }
+        OnCharacterDamaged?.Invoke(damageAmount);
     }
 
     protected void Death()
