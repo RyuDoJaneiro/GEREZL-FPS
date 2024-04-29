@@ -1,25 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class GunLogic : MonoBehaviour
 {
-    [SerializeField] private GunDatapack gunData;
-    [SerializeField] private float gunMaxDistance = 30f;
+    [SerializeField] private Camera mainCamera;
 
-    public GunDatapack GunData { get => gunData; set => gunData = value; }
-    public float GunMaxDistance { get => gunMaxDistance; set => gunMaxDistance = value; }
+    [Header("Gun Settings")]
+    [SerializeField] private GunDatapack _gunData;
+    [SerializeField] private float _gunMaxDistance = 100f;
+    [SerializeField] private Transform _gunCanonTransform;
+
+    public GunDatapack GunData { get => _gunData; set => _gunData = value; }
+
+    public event Action<Vector3, Vector3> OnGunShoot = delegate { };
 
     public void Shoot()
     {
-        Ray bullet = new(transform.position, Camera.main.transform.forward);
-        if (Physics.Raycast(bullet, out RaycastHit hitInfo, GunMaxDistance))
-        {
-            Debug.Log($"{name}: I shooted to {hitInfo.transform.name}");
-            IHitteable hitObj = hitInfo.transform.GetComponent<IHitteable>();
+        Ray bullet = new(mainCamera.transform.position, mainCamera.transform.forward);
 
-            hitObj?.ReceiveDamage(GunData.damagePerBullet);
+        if (Physics.Raycast(bullet, out RaycastHit hitInfo, _gunMaxDistance))
+        {
+            IHitteable hittedObject = hitInfo.collider.GetComponent<IHitteable>();
+            hittedObject?.ReceiveDamage(_gunData.damagePerBullet);
+
+            OnGunShoot?.Invoke(_gunCanonTransform.position, hitInfo.point);
+            Debug.Log($"Gun shooted at: {hitInfo.transform.name}");
         }
+
     }
 
     public void Reload()
