@@ -23,6 +23,11 @@ public class CameraController : MonoBehaviour
 
     public event Action<bool> OnEnemyDetection = delegate { };
 
+    private void Start()
+    {
+        // Prevents camera from looking down at the start of the scene
+        transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+    }
     private void OnEnable()
     {
         if (!inputReader) return;
@@ -52,6 +57,9 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
+        if (!targetObject)
+            return;
+
         _mouseX *= _mouseXSensitivity * Time.deltaTime;
         _mouseY *= _mouseYSensitivity * Time.deltaTime;
 
@@ -64,7 +72,6 @@ public class CameraController : MonoBehaviour
         if (Physics.Raycast(pointToObj, _maxEnemyRayDetection, _enemyLayerMask))
         {
             OnEnemyDetection?.Invoke(true);
-            Debug.Log($"{name}: Enemy detected!");
         }
         else
         {
