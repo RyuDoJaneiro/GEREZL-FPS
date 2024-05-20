@@ -85,13 +85,12 @@ MonoBehaviour:
   characterGravity: -9.81
   characterGravityMultiplier: 1
   fallVelocity: 0
-  agent: {fileID: 249175605801276859}
-  enemyBehaviour: 1
-  waypoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  attackPower: 5
+  _agent: {fileID: 0}
+  _enemyBehaviour: 0
+  _waypoints: []
+  attackRangeRadius: 7
+  _timeBetweenAttacks: 0.8
 --- !u!195 &249175605801276859
 NavMeshAgent:
   m_ObjectHideFlags: 0

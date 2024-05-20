@@ -10,8 +10,8 @@ public class CameraController : MonoBehaviour
     private float _mouseY;
 
     [Header("Script References")]
-    [SerializeField] private Transform targetObject;
-    [SerializeField] private InputReader inputReader;
+    [SerializeField] private Transform _targetObject;
+    [SerializeField] private InputReader _inputReader;
 
     [Header("Mouse Settings")]
     [SerializeField] private float _mouseXSensitivity = 5f;
@@ -27,24 +27,27 @@ public class CameraController : MonoBehaviour
     {
         // Prevents camera from looking down at the start of the scene
         transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+
+        Cursor.lockState = CursorLockMode.Locked;
     }
     private void OnEnable()
     {
-        if (!inputReader) return;
+        if (!_inputReader) return;
 
-        inputReader.OnMouseXInput += GetMouseX;
-        inputReader.OnMouseYInput += GetMouseY;
+        _inputReader.OnMouseXInput += GetMouseX;
+        _inputReader.OnMouseYInput += GetMouseY;
     }
 
     private void OnDisable()
     {
-        inputReader.OnMouseXInput -= GetMouseX;
-        inputReader.OnMouseYInput -= GetMouseY;
+        _inputReader.OnMouseXInput -= GetMouseX;
+        _inputReader.OnMouseYInput -= GetMouseY;
     }
 
     private void Awake()
     {
-        if (!targetObject)
+        _inputReader = FindAnyObjectByType<InputReader>();
+        if (!_targetObject)
         {
             Debug.LogError($"{name}: No target assigned!\n" +
                 $"Disabling to avoid errors!");
@@ -57,7 +60,7 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!targetObject)
+        if (!_targetObject)
             return;
 
         _mouseX *= _mouseXSensitivity * Time.deltaTime;
@@ -66,7 +69,7 @@ public class CameraController : MonoBehaviour
         transform.Rotate(Vector3.up, _mouseX, Space.World);
         transform.Rotate(Vector3.right, -_mouseY, Space.Self);
 
-        transform.position = targetObject.position;
+        transform.position = _targetObject.position;
         
         Ray pointToObj = new(transform.position, transform.forward);
         if (Physics.Raycast(pointToObj, _maxEnemyRayDetection, _enemyLayerMask))

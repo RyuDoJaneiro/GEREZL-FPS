@@ -12,6 +12,7 @@ namespace Inputs
         public event Action OnReloadInput = delegate { };
         public event Action<float> OnMouseXInput = delegate { };
         public event Action<float> OnMouseYInput = delegate { };
+        public event Action OnPauseInput = delegate { };
 
         public void HandleMovementInput(InputAction.CallbackContext context)
         {
@@ -44,6 +45,12 @@ namespace Inputs
         public void HandleMouseYInput(InputAction.CallbackContext context)
         {
             OnMouseYInput.Invoke(context.ReadValue<float>());
+        }
+
+        public void HandlePauseInput(InputAction.CallbackContext context)
+        {
+            if (context.started)
+                OnPauseInput?.Invoke();  
         }
     }
 }

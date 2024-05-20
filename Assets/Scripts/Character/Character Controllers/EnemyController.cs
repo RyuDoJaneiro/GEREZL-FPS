@@ -7,14 +7,18 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyController : CharacterManager
 {
-    private Transform playerTransform;
-    private int waypointIndex;
-    private Vector3 nextWaypoint;
+    private Transform _playerTransform;
+    private int _waypointIndex;
+    private Vector3 _nextWaypoint;
 
-    [Header("Behaviour Settings")]
-    [SerializeField] private NavMeshAgent agent;
-    [SerializeField] private EnemyBehaviour enemyBehaviour;
-    [SerializeField] private Transform[] waypoints;
+    [Header("Enemy Settings")]
+    [SerializeField] int attackPower;
+    [SerializeField] private NavMeshAgent _agent;
+    [SerializeField] private EnemyBehaviour _enemyBehaviour;
+    [SerializeField] private Transform[] _waypoints;
+    [SerializeField] private float attackRangeRadius = 7f;
+    [SerializeField] private float _timeBetweenAttacks = 0.8f;
+    private float _attackTimer;
 
     private enum EnemyBehaviour
     {
@@ -25,8 +29,9 @@ public class EnemyController : CharacterManager
 
     private void Awake()
     {
-        playerTransform = GameObject.Find("Player").GetComponent<Transform>();
-        nextWaypoint = waypoints[waypointIndex].position;
+        _playerTransform = GameObject.Find("Player").GetComponent<Transform>();
+        _nextWaypoint = _waypoints[_waypointIndex].position;
+        _agent = GetComponent<NavMeshAgent>();
     }
 
     private void FixedUpdate()
@@ -35,7 +40,15 @@ public class EnemyController : CharacterManager
         //_characterController.Move(characterSpeed * Time.deltaTime * nextPosition);
         // ApplyGravity();
 
-        BehaviourState(enemyBehaviour);
+        _attackTimer += Time.deltaTime;
+
+        if (_playerTransform == null)
+            return;
+
+        if (Vector3.Distance(transform.position, _playerTransform.position) < attackRangeRadius)
+            _enemyBehaviour = EnemyBehaviour.Chase;
+
+        BehaviourState(_enemyBehaviour);
     }
 
     private void BehaviourState(EnemyBehaviour enemyBehaviour)
@@ -43,21 +56,37 @@ public class EnemyController : CharacterManager
         switch (enemyBehaviour)
         {
             case EnemyBehaviour.Idle:
-                agent.SetDestination(transform.position);
+                _agent.SetDestination(transform.position);
                 return;
             case EnemyBehaviour.Patrol:
-                if (Vector3.Distance(transform.position, nextWaypoint) < 1)
+                if (Vector3.Distance(transform.position, _nextWaypoint) < 1)
                 {
-                    waypointIndex++;
-                    if (waypointIndex == waypoints.Length) waypointIndex = 0;
+                    _waypointIndex++;
+                    if (_waypointIndex == _waypoints.Length) _waypointIndex = 0;
 
-                    nextWaypoint = waypoints[waypointIndex].position;
+                    _nextWaypoint = _waypoints[_waypointIndex].position;
                 }
-                agent.SetDestination(nextWaypoint);
+                _agent.SetDestination(_nextWaypoint);
                 return;
             case EnemyBehaviour.Chase:
-                agent.SetDestination(playerTransform.position);
+                _agent.SetDestination(_playerTransform.position);
+                if (Vector3.Distance(transform.position, _playerTransform.position) < attackRangeRadius && _attackTimer >= _timeBetweenAttacks)
+                {
+                    _playerTransform.gameObject.GetComponent<CharacterManager>().ReceiveDamage(attackPower);
+                    _attackTimer = 0;
+                }
                 return;
         }
+    }
+
+    public override void ReceiveDamage(float damageAmount)
+    {
+        _enemyBehaviour = EnemyBehaviour.Chase;
+        base.ReceiveDamage(damageAmount);
+    }
+
+    private void Attack()
+    {
+
     }
 }

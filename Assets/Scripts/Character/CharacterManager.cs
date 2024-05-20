@@ -70,15 +70,18 @@ public class CharacterManager : MonoBehaviour, IHitteable
         nextPosition.y = fallVelocity;
     }
 
-    public void ReceiveDamage(float damageAmount)
+    public virtual void ReceiveDamage(float damageAmount)
     {
         characterActualHealth -= damageAmount;
         OnCharacterDamaged?.Invoke(damageAmount);
+
+        if (characterActualHealth <= 0)
+            Death();
     }
 
-    protected void Death()
+    protected virtual void Death()
     {
-        Debug.LogWarning($"{name}: Has died!");
+        Debug.Log($"{name}: Has died!");
         Destroy(gameObject);
     }
 }

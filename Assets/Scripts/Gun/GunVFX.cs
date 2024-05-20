@@ -4,17 +4,22 @@ using UnityEngine;
 
 public class GunVFX : MonoBehaviour
 {
-    [SerializeField] private LineRenderer lineRenderer;
-    [SerializeField] private GunLogic gunLogic;
+    [SerializeField] private LineRenderer _lineRenderer;
+    [SerializeField] private GunLogic _gunLogic;
+
+    private void Awake()
+    {
+        _lineRenderer = FindAnyObjectByType<LineRenderer>();
+    }
 
     private void OnEnable()
     {
-        gunLogic.OnGunShoot += RenderVFX;
+        _gunLogic.OnGunShoot += RenderVFX;
     }
 
     private void OnDisable()
     {
-        gunLogic.OnGunShoot -= RenderVFX;
+        _gunLogic.OnGunShoot -= RenderVFX;
     }
 
     private void RenderVFX(Vector3 bulletOrigin, Vector3 bulletDestination)
@@ -24,12 +29,12 @@ public class GunVFX : MonoBehaviour
 
     private IEnumerator RenderBullet(Vector3 bulletOrigin, Vector3 bulletDestination)
     {
-        lineRenderer.positionCount = 2;
-        lineRenderer.SetPosition(0, bulletOrigin);
-        lineRenderer.SetPosition(1, bulletDestination);
+        _lineRenderer.positionCount = 2;
+        _lineRenderer.SetPosition(0, bulletOrigin);
+        _lineRenderer.SetPosition(1, bulletDestination);
 
         yield return new WaitForSeconds(0.2f);
 
-        lineRenderer.positionCount = 1;
+        _lineRenderer.positionCount = 1;
     }
 }

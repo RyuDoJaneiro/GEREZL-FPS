@@ -12,4 +12,5 @@ public class GunDatapack : ScriptableObject
     public int bulletsPerShoot = 1;
     public float damagePerBullet = 1f;
     public float timeBetweenShoots = 1f;
+    public int maxAmmo = 1;
 }

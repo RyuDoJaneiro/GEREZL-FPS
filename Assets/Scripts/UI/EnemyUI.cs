@@ -31,6 +31,9 @@ public class EnemyUI : MonoBehaviour
 
     public void HandleHealthBarUpdate(float amount)
     {
+        if (!_enemyHealthBar.gameObject.activeSelf)
+            _enemyHealthBar.gameObject.SetActive(true);
+
         _enemyHealthBar.value -= amount;
 
         if (_enemyHealthBar.value < 0)

@@ -16,3 +16,4 @@ MonoBehaviour:
   bulletsPerShoot: 1
   damagePerBullet: 10
   timeBetweenShoots: 1
+  maxAmmo: 12
