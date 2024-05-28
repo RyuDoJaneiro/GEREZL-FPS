@@ -10,6 +10,9 @@ public class GunVFX : MonoBehaviour
     private void Awake()
     {
         _lineRenderer = FindAnyObjectByType<LineRenderer>();
+
+        if (_lineRenderer == null)
+            Debug.Log($"{name}: The _lineRenderer is null!");
     }
 
     private void OnEnable()

@@ -899,9 +899,12 @@ MonoBehaviour:
   characterGravityMultiplier: 1
   fallVelocity: 0
   _playerInput: {x: 0, y: 0}
-  deathZoneLayer:
+  _deathZoneLayer:
     serializedVersion: 2
     m_Bits: 512
+  _winZoneLayer:
+    serializedVersion: 2
+    m_Bits: 1024
   _gunLogic: {fileID: 246934488954736757}
 --- !u!143 &1246171122422827321
 CharacterController:
@@ -945,7 +948,7 @@ MonoBehaviour:
   _gunData: {fileID: 11400000, guid: c4cdb1d532908604d9ff514c99a87869, type: 2}
   _gunMaxDistance: 100
   _gunCanonTransform: {fileID: 3740599986953418836}
-  _gunAmmo: 1
+  _gunAmmo: 12
 --- !u!114 &5413469042828282933
 MonoBehaviour:
   m_ObjectHideFlags: 0

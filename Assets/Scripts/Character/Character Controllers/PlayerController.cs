@@ -20,6 +20,7 @@ public class PlayerController : CharacterManager
 
     private void Awake()
     {
+        _characterController = GetComponent<CharacterController>();
         _mainCamera = Camera.main;
         _sceneryManager = GameObject.Find("Game Manager").GetComponent<SceneryManager>();
         _inputReader = GameObject.Find("Game Manager").GetComponent<InputReader>();
@@ -51,6 +52,12 @@ public class PlayerController : CharacterManager
 
     private void FixedUpdate()
     {
+        if (_characterController == null)
+        {
+            Debug.LogError($"{name}: The _characterController is null!");
+            return;
+        }
+
         _characterController.Move(characterSpeed * Time.deltaTime * nextPosition);
         ApplyGravity();
         RotatePlayer();
@@ -59,7 +66,11 @@ public class PlayerController : CharacterManager
         Collider[] winColliders = Physics.OverlapSphere(transform.position, 5f, _winZoneLayer);
 
         foreach (var collider in deathColliders)
+        {
             Death();
+            gameObject.transform.Find("Player UI").gameObject.SetActive(false);
+            Cursor.lockState = CursorLockMode.None;
+        }
 
         foreach (var collider in winColliders)
         {
